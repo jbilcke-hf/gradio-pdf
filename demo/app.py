@@ -60,7 +60,7 @@ def qa(question: str, doc: str) -> str:
 
 demo = gr.Interface(
     qa,
-    [gr.Textbox(label="Question"), PDF(label="Document")],
+    [gr.Textbox(label="Question"), PDF(label="Document", enable_zoom=True)],
     gr.Textbox(),
     examples=[["What is the total gross worth?", str(dir_ / "invoice_2.pdf")],
               ["Whos is being invoiced?", str(dir_ / "sample_invoice.pdf")]]

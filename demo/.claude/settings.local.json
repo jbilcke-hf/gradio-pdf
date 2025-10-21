@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/jbilcke/Projects/comic_or_story_generation/gradio-pdf/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
