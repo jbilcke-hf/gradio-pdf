@@ -32,6 +32,9 @@ class PDF(Component):
         load_fn: Callable[..., Any] | None = None,
         every: float | None = None,
         starting_page: int | None = 1,
+        enable_zoom: bool = False,
+        min_zoom: float = 1.0,
+        max_zoom: float = 3.0,
     ):
         super().__init__(
             value,
@@ -51,6 +54,9 @@ class PDF(Component):
         )
         self.height = height
         self.starting_page = starting_page
+        self.enable_zoom = enable_zoom
+        self.min_zoom = min_zoom
+        self.max_zoom = max_zoom
 
     def preprocess(self, payload: FileData) -> str:
         if payload:

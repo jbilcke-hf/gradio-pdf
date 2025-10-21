@@ -8,3 +8,5 @@ __tmp/*
 *.pyi
 node_modules
 templates/
+.venv/
+venv/

@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed:*)",
+      "Bash(python:*)",
+      "Bash(demo/.venv/bin/python:*)",
+      "Bash(demo/.venv/bin/pip install ruff)",
+      "Bash(npm install)",
+      "Bash(PATH=\"$PWD/demo/.venv/bin:$PATH\" demo/.venv/bin/python -m gradio cc build)",
+      "Bash(PATH:*)",
+      "Bash(demo/.venv/bin/pip install build)",
+      "Bash(demo/.venv/bin/pip install -e .)",
+      "Bash(python3:*)",
+      "Bash(.venv/bin/pip install:*)",
+      "Bash(PATH=\"$PWD/.venv/bin:$PATH\" .venv/bin/python -m gradio cc build)",
+      "Read(//Users/jbilcke/Downloads/gradio-main/js/slider/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -37,12 +37,96 @@ This is a **Gradio custom component** that follows Gradio's dual-architecture pa
 
 ## Development Commands
 
+### Initial Development Setup (IMPORTANT!)
+
+**⚠️ Critical**: Gradio custom components require building before they can be used. The frontend assets must be compiled and the component installed in your Python environment.
+
+#### Complete Setup Steps:
+
+1. **Create and activate a virtual environment** (in the project root):
+   ```bash
+   # Create venv in project root
+   python3 -m venv .venv
+
+   # Activate it (macOS/Linux)
+   source .venv/bin/activate
+
+   # Or on Windows
+   .venv\Scripts\activate
+   ```
+
+2. **Install frontend dependencies**:
+   ```bash
+   cd frontend
+   npm install
+   cd ..
+   ```
+
+3. **Install Python dependencies**:
+   ```bash
+   # Install core build dependencies
+   .venv/bin/pip install gradio build ruff
+
+   # Install demo dependencies (optional, only if running demos)
+   .venv/bin/pip install torch transformers pdf2image pytesseract
+   ```
+
+   **Gotcha**: The `build` package is required for `python -m build` and `ruff` is required by the Gradio build process for code formatting.
+
+4. **Install the component in development mode**:
+   ```bash
+   .venv/bin/pip install -e .
+   ```
+
+   **Important**: The component must be installed before building, otherwise `gradio cc build` will fail with "package is not installed" error.
+
+5. **Build the custom component**:
+   ```bash
+   # From the project root directory
+   PATH="$PWD/.venv/bin:$PATH" .venv/bin/python -m gradio cc build
+   ```
+
+   **Gotcha**: The `PATH` must include your venv's bin directory so that `ruff` can be found during the build process. Without this, you'll get `FileNotFoundError: [Errno 2] No such file or directory: 'ruff'`.
+
+   This command will:
+   - Build the frontend (compiles Svelte components to JavaScript)
+   - Generate documentation files (`demo/space.py`, `README.md`)
+   - Build the Python wheel package in `dist/`
+
+   The `-e` flag from step 4 installs in "editable" mode, so Python code changes are immediately reflected without reinstalling. However, **frontend changes require rebuilding** (step 5).
+
+6. **Run the demo**:
+   ```bash
+   cd demo
+   ../.venv/bin/python app.py
+   # Or use _app.py for the custom demo with document QA
+   ../.venv/bin/python _app.py
+   ```
+
+#### Common Issues and Solutions:
+
+- **404 errors in browser** (`style.css`, `index.js`, `manifest.json` not found):
+  - **Cause**: Frontend hasn't been built yet
+  - **Solution**: Run `gradio cc build` (step 3 above)
+
+- **FileNotFoundError: 'ruff'** during build:
+  - **Cause**: `ruff` not in PATH when subprocess is spawned
+  - **Solution**: Either install `ruff` globally or use `PATH="$PWD/demo/.venv/bin:$PATH"` prefix
+
+- **No module named 'build'**:
+  - **Cause**: Missing build dependency
+  - **Solution**: `pip install build`
+
+- **Frontend changes not appearing**:
+  - **Cause**: Frontend is compiled, not live-reloaded
+  - **Solution**: Re-run `gradio cc build` after Svelte changes
+
 ### Building and Publishing
 
 This package uses Python's `hatchling` build system:
 
 ```bash
-# Build the package
+# Build the package (after running gradio cc build)
 python -m build
 
 # Publish to PyPI
@@ -68,8 +152,9 @@ The frontend uses Node.js and Gradio's build tooling:
 ```bash
 cd frontend
 npm install
-# Build commands would be handled by Gradio's tooling
 ```
+
+**Note**: Use `gradio cc build` (not npm) to build the frontend, as it integrates with Gradio's custom component system.
 
 ## Important Implementation Notes
 
@@ -91,8 +176,8 @@ npm install
 
 ### Version Management
 
-- Python package version is in `pyproject.toml` (`version = "0.0.22"`)
-- Frontend package version is in `frontend/package.json` (`version = "0.2.0"`)
+- Python package version is in `pyproject.toml` (`version = "0.0.23"`)
+- Frontend package version is in `frontend/package.json` (`version = "0.2.1"`)
 - These versions should be kept in sync when publishing
 
 ## Dependencies
