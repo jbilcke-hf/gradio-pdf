@@ -507,11 +507,11 @@
     />
     {#if _value}
       <ModifyUpload i18n={gradio.i18n} on:clear={handle_clear} />
-      <div class="pdf-container" style={height ? `height: ${height}px; max-height: ${height}px;` : ''}>
+      <div class="pdf-container" style={`height: ${height || 600}px; min-height: 400px; max-height: ${height ? height : 800}px;`}>
         <div
           class="pdf-canvas"
           bind:this={pdfCanvasRef}
-          on:wheel={handle_wheel}
+          on:wheel={enable_zoom ? handle_wheel : null}
           on:touchstart={handle_touchstart}
           on:touchmove={handle_touchmove}
           on:touchend={handle_touchend}
@@ -603,7 +603,7 @@
       <div class="fullscreen-container">
         <div
           class="fullscreen-canvas"
-          on:wheel={handle_wheel}
+          on:wheel={enable_zoom ? handle_wheel : null}
           on:touchstart={handle_touchstart}
           on:touchmove={handle_touchmove}
           on:touchend={handle_touchend}
@@ -676,8 +676,6 @@
 <style>
   .pdf-container {
     position: relative;
-    min-height: 400px;
-    max-height: 800px;
     flex-shrink: 0;
     border-radius: 4px;
     border: 1px solid rgba(255, 255, 255, 0.6);
@@ -687,17 +685,15 @@
   .pdf-canvas {
     position: relative;
     overflow: auto;
+    overflow-x: auto;
+    overflow-y: auto;
     width: 100%;
     height: 100%;
     overscroll-behavior: contain;
   }
 
   .canvas-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-width: 100%;
-    min-height: 100%;
+    display: block;
     width: fit-content;
     height: fit-content;
     margin: 0 auto;
